@@ -34,6 +34,4 @@ with PiCamera() as src:
 #SPDR =255 , turn right
 #SPDR = 100, TURN LEFT
 #SPDR = 0 , DONT TURN
-            
-        
-            
+           
