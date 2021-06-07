@@ -1,0 +1,62 @@
+#include <SPI.h>
+//arud as slave
+// pi as master
+byte data = 0;
+#define leftEn 4 
+#define leftRe 8
+#define leftFw 9
+#define rightEn 3
+#define rightRe 6
+#define rightFw 7
+volatile boolean data_received = false;
+void setup() {
+ // cli();
+  Serial.begin(115200);
+  pinMode(MISO, OUTPUT);
+  pinMode(MOSI, INPUT);
+  pinMode(2,OUTPUT); //ISR test LED PIN
+
+  pinMode(leftEn, OUTPUT);
+  pinMode(leftRe, OUTPUT);
+  pinMode(leftFw, OUTPUT);
+  
+  pinMode(rightEn, OUTPUT);
+  pinMode(rightRe, OUTPUT);
+  pinMode(rightFw, OUTPUT);
+
+  digitalWrite(leftRe, LOW); // the car never has to move backwards so the reveser signals can be pulled ow
+  digitalWrite(rightRe, LOW);
+  digitalWrite(leftFw, HIGH);
+  digitalWrite(rightFw, HIGH); 
+  
+  SPCR |= (1<<SPE) | (1<<SPIE);
+ // sei();
+}
+
+ISR(SPI_STC_vect){
+  data = SPDR;
+ // digitalWrite(2, HIGH);
+  //delay(1000);
+  //digitalWrite(2, LOW); LED flashes when data is received 
+  
+}
+ void loop(){
+  }
+  //interprate PI data
+  if (data == 255){
+    analogWrite(rightEn, 255);
+    analogWrite(leftEn, 155);
+     
+  }
+  else   if (data == 100){
+    analogWrite(rightEn, 155);
+    analogWrite(leftEn, 255);
+     
+  }
+  else 
+    if (data == 255){
+    analogWrite(rightEn, 255);
+    analogWrite(leftEn, 255);
+     
+  }
+ }
